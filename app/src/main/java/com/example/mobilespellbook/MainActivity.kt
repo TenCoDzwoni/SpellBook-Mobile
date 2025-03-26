@@ -17,46 +17,49 @@ class MainActivity : AppCompatActivity(), OnInteractionListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sharedPreferences = getSharedPreferences("my_cookbook_prefs", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("spellbook_prefs", Context.MODE_PRIVATE)
         loadSpells()
 
         if (savedInstanceState == null) {
-            openRecipeListFragment()
+            openSpellListFragment()
         }
     }
 
-    private fun openRecipeListFragment() {
-        supportFragmentManager.commit {
-            replace(R.id.fragmentContainer, SpellListFragment.newInstance(), "SpellList")
-        }
+    private fun openSpellListFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, SpellListFragment())
+            .commit()
     }
 
-    override fun onSpellAdded(spell: Spell) {
-        spells.add(spell)
-        saveRecipes()
+    override fun onSpellSelected(spell: Spell, index: Int) {
+        // Implementacja szczegółów zaklęcia
+    }
+
+    override fun onSpellAdded(newSpell: Spell) {
+        spells.add(newSpell)
+        saveSpells()
+        (supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? SpellListFragment)?.refreshList()
         supportFragmentManager.popBackStack()
     }
 
-    override fun onSpellDeleted(position: Int) {
-        if (position in spells.indices) {
-            spells.removeAt(position)
-            saveRecipes()
+    override fun onSpellDeleted(index: Int) {
+        if (index in spells.indices) {
+            spells.removeAt(index)
+            saveSpells()
+            (supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? SpellListFragment)?.refreshList()
         }
-        supportFragmentManager.popBackStack()
     }
 
     private fun loadSpells() {
-        val json = sharedPreferences.getString("spells_list", null) ?: return
-        val type = object : TypeToken<MutableList<Spell>>() {}.type
-        spells = gson.fromJson(json, type)
+        val json = sharedPreferences.getString("spells", null)
+        spells = gson.fromJson(json, object : TypeToken<MutableList<Spell>>() {}.type) ?: mutableListOf()
     }
 
-    private fun saveRecipes() {
-        sharedPreferences.edit().apply {
-            putString("recipes_list", gson.toJson(spells))
-            apply()
-        }
+    private fun saveSpells() {
+        sharedPreferences.edit()
+            .putString("spells", gson.toJson(spells))
+            .apply()
     }
 
-    fun getSpells(): MutableList<Spell> = spells
+    fun getSpells() = spells
 }
