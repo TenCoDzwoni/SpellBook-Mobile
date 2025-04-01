@@ -6,15 +6,26 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/addSpellButton"
-        android:layout_width="wrap_content"
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Dodaj zaklęcie"/>
-
+        android:text="Księga Zaklęć"
+        android:textStyle="bold"
+        android:textColor="@color/purple"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        />
     <ListView
         android:id="@+id/spellListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"/>
+    <Button
+        android:id="@+id/addSpellButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Dodaj zaklęcie"
+        android:backgroundTint="@color/purple"
+        android:textColor="@color/white"/>
 </LinearLayout>
+

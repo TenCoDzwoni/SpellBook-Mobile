@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity(), OnInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main)// Ładuje layout activity_main.xml
 
         sharedPreferences = getSharedPreferences("spellbook_prefs", Context.MODE_PRIVATE)
         loadSpells()
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity(), OnInteractionListener {
     }
 
     override fun onSpellDeleted(index: Int) {
-        if (index in spells.indices) {
+        if (index in spells.indices) { // zwraca index np-0-4 dla 5 zaklęć
             spells.removeAt(index)
             saveSpells()
             (supportFragmentManager.findFragmentById(R.id.fragmentContainer) as? SpellListFragment)?.refreshList()
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), OnInteractionListener {
     private fun loadSpells() {
         val json = sharedPreferences.getString("spells", null)
         spells = gson.fromJson(json, object : TypeToken<MutableList<Spell>>() {}.type) ?: mutableListOf()
-    }
+    }//TypeToken tworzy anonimową klasę, która przechowuje informację o typie.
 
     private fun saveSpells() {
         sharedPreferences.edit()
